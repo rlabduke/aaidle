@@ -1,0 +1,1004 @@
+/* Electron Density Guessing Game — game-specific styles */
+/* Shared styles (progress, canvas, panel, stats, stars, btn, complete, overlay) in mp-game-common.css */
+
+/* Resolution indicator */
+.mp-density-resolution {
+    text-align: center;
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+    background-color: var(--mp-cream);
+    border: 1px solid var(--mp-tan-light);
+    font-family: monospace;
+}
+.mp-density-resolution .res-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--mp-maroon);
+}
+.mp-density-resolution .res-label {
+    font-size: 0.75rem;
+    color: var(--mp-olive);
+    text-transform: uppercase;
+}
+.mp-density-resolution-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    padding: 0 0.25rem;
+}
+.mp-density-resolution-steps .step {
+    width: 16%;
+    height: 4px;
+    background-color: var(--mp-cream-dark);
+    border-radius: 2px;
+    transition: background-color 0.3s;
+}
+.mp-density-resolution-steps .step.active {
+    background-color: var(--mp-olive);
+}
+.mp-density-resolution-steps .step.revealed {
+    background-color: #cc9900;
+}
+
+/* Amino acid selector grid */
+.mp-density-aa-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    margin-top: 0.5rem;
+}
+.mp-density-aa-btn {
+    border: 1px solid #cccccc;
+    background-color: var(--mp-cream);
+    color: var(--mp-text);
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-family: monospace;
+    padding: 0.35rem 0;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    line-height: 1.2;
+}
+.mp-density-aa-btn:hover {
+    filter: brightness(0.9);
+    transform: scale(1.05);
+}
+.mp-density-aa-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+.mp-density-aa-btn .aa-code {
+    font-size: 0.85rem;
+    display: block;
+}
+.mp-density-aa-btn .aa-three {
+    display: none;
+}
+.mp-density-aa-btn .aa-name {
+    font-size: 0.55rem;
+    font-weight: normal;
+    font-family: var(--mp-font-ui);
+    opacity: 0.8;
+    display: block;
+}
+
+/* Color coding by property group */
+.mp-density-aa-btn.group-nonpolar {
+    background-color: #e0e0e0;
+    border-color: #aaaaaa;
+}
+.mp-density-aa-btn.group-aromatic {
+    background-color: #e8d5f0;
+    border-color: #b388c9;
+}
+.mp-density-aa-btn.group-polar {
+    background-color: #d5f0d5;
+    border-color: #88c988;
+}
+.mp-density-aa-btn.group-charged-pos {
+    background-color: #d5e0f0;
+    border-color: #88a0c9;
+}
+.mp-density-aa-btn.group-charged-neg {
+    background-color: #f0d5d5;
+    border-color: #c98888;
+}
+
+/* Correct/wrong feedback on AA button */
+.mp-density-aa-btn.correct {
+    background-color: #44cc44 !important;
+    border-color: #228822 !important;
+    color: #ffffff !important;
+}
+.mp-density-aa-btn.wrong {
+    background-color: #cc4444 !important;
+    border-color: #882222 !important;
+    color: #ffffff !important;
+}
+.mp-density-aa-btn.answer {
+    background-color: #cc9900 !important;
+    border-color: #886600 !important;
+    color: #ffffff !important;
+}
+
+/* Improve resolution button (extends .mp-game-btn) */
+.mp-density-btn-improve {
+    background-color: #336666;
+    color: #ffffff;
+    border-color: #336666;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+}
+.mp-density-btn-improve:hover {
+    background-color: #225555;
+}
+
+/* Backbone hint button (extends .mp-game-btn) */
+.mp-density-btn-hint {
+    background-color: #1a8a8a;
+    color: #ffffff;
+    border-color: #1a8a8a;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+}
+.mp-density-btn-hint:hover {
+    background-color: #147070;
+}
+
+/* Leaderboard table */
+.mp-density-leaderboard {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.mp-density-leaderboard th,
+.mp-density-leaderboard td {
+    padding: 0.25rem 0.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mp-density-leaderboard th {
+    background-color: var(--mp-cream);
+    border-bottom: 1px solid var(--mp-tan);
+    text-align: left;
+    font-family: var(--mp-font-ui);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--mp-olive);
+}
+.mp-density-leaderboard td {
+    border-bottom: 1px dotted var(--mp-cream-dark);
+}
+/* Column widths: narrow rank, wider score/stars */
+.mp-density-leaderboard th:nth-child(1),
+.mp-density-leaderboard td:nth-child(1) { width: 15%; }
+.mp-density-leaderboard th:nth-child(2),
+.mp-density-leaderboard td:nth-child(2) { width: 30%; }
+.mp-density-leaderboard th:nth-child(3),
+.mp-density-leaderboard td:nth-child(3) { width: 25%; }
+.mp-density-leaderboard th:nth-child(4),
+.mp-density-leaderboard td:nth-child(4) { width: 30%; }
+
+/* Reveal overlay (shown after each guess) */
+.mp-density-reveal {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    text-align: center;
+    z-index: 10;
+    font-family: var(--mp-font-ui);
+    font-size: 0.9rem;
+    border: 1px solid var(--mp-olive);
+    max-width: 500px;
+}
+.mp-density-reveal .reveal-result {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.mp-density-reveal .reveal-result.correct {
+    color: #44cc44;
+}
+.mp-density-reveal .reveal-result.wrong {
+    color: #ff4444;
+}
+.mp-density-reveal .reveal-result.partial {
+    color: #cc9900;
+}
+.mp-density-reveal .reveal-info {
+    font-size: 0.8rem;
+    color: #aaaaaa;
+    margin-top: 0.5rem;
+}
+
+/* Result panels: Hide collapses them to a one-row strip at the top left of the map */
+.mp-density-reveal .result-hide,
+.mp-game-complete .result-hide,
+.mp-density-daily-result .result-hide {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+.mp-density-reveal.collapsed .result-hide,
+.mp-game-complete.collapsed .result-hide,
+.mp-density-daily-result.collapsed .result-hide {
+    display: none;
+}
+
+/* Practice score display */
+.mp-density-game-score {
+    text-align: center;
+    font-family: var(--mp-font-ui);
+    font-size: 0.85rem;
+    color: var(--mp-olive);
+    margin-bottom: 0.4rem;
+}
+.mp-density-game-score .score-value {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--mp-maroon);
+    font-family: monospace;
+}
+
+/* Round indicator */
+.mp-density-round {
+    text-align: center;
+    font-family: var(--mp-font-ui);
+    font-size: 0.8rem;
+    color: var(--mp-olive);
+    margin-bottom: 0.5rem;
+}
+.mp-density-round .round-number {
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--mp-maroon);
+}
+
+/* Point cost badge */
+.mp-density-cost {
+    font-size: 0.7rem;
+    color: #cc6600;
+    font-style: italic;
+}
+
+/* Difficulty selector */
+.mp-density-difficulty-select {
+    width: 100%;
+    padding: 0.3rem;
+    border: 1px solid var(--mp-tan-light);
+    font-size: 0.85rem;
+    font-family: inherit;
+    margin-bottom: 0.5rem;
+}
+
+/* === Mode Tabs === */
+.mp-density-mode-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--mp-tan);
+    margin-bottom: 0;
+}
+.mp-density-mode-tab {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--mp-tan);
+    border-bottom: none;
+    background-color: #f0f0e8;
+    color: var(--mp-olive);
+    font-family: var(--mp-font-ui);
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: -1px;
+    position: relative;
+    top: 2px;
+}
+.mp-density-mode-tab:hover {
+    background-color: var(--mp-cream-dark);
+}
+.mp-density-mode-tab.active {
+    background-color: #ffffff;
+    color: var(--mp-maroon);
+    border-bottom: 2px solid #ffffff;
+}
+
+/* === Guess Indicators === */
+.mp-density-guess-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+.guess-dot {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: 2px solid var(--mp-tan-light);
+    background-color: var(--mp-cream);
+    color: var(--mp-olive);
+}
+.guess-dot.guess-unused {
+    background-color: var(--mp-cream);
+    border-color: var(--mp-tan-light);
+}
+.guess-dot.guess-improve {
+    background-color: #e8f4f8;
+    border-color: #336666;
+    font-size: 0.8rem;
+}
+.guess-dot.guess-correct {
+    background-color: #44cc44;
+    border-color: #228822;
+    color: #ffffff;
+}
+.guess-dot.guess-wrong {
+    background-color: #cc4444;
+    border-color: #882222;
+    color: #ffffff;
+}
+
+/* === Daily Result Overlay === */
+.mp-density-daily-result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.92);
+    color: #ffffff;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    border: 2px solid #cc9900;
+    z-index: 10;
+    font-family: var(--mp-font-ui);
+    max-width: 400px;
+    width: 90%;
+    max-height: 92%;
+    overflow-y: auto;
+}
+.mp-density-daily-result h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+.daily-result-answer {
+    font-size: 1rem;
+    color: #cccccc;
+    margin-bottom: 0.75rem;
+}
+.daily-result-emoji {
+    font-size: 1.5rem;
+    letter-spacing: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+/* Stats grid in daily result overlay */
+.daily-stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+}
+.daily-stat {
+    text-align: center;
+}
+.daily-stat-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+.daily-stat-label {
+    font-size: 0.65rem;
+    color: #999999;
+    text-transform: uppercase;
+}
+
+/* Distribution chart */
+.daily-distribution {
+    margin-bottom: 0.75rem;
+}
+.dist-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 2px;
+}
+.dist-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 1rem;
+    text-align: right;
+    color: #cccccc;
+}
+.dist-bar-wrap {
+    flex: 1;
+}
+.dist-bar {
+    background-color: #555555;
+    color: #ffffff;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    text-align: right;
+    min-width: 1.5rem;
+}
+.dist-bar-highlight {
+    background-color: #44cc44;
+}
+.dist-bar-loss {
+    background-color: #774444;
+}
+.dist-bar-loss.dist-bar-highlight {
+    background-color: #cc4444;
+}
+
+/* Solve times and recent games */
+.play-times {
+    font-size: 0.8rem;
+    color: #cccccc;
+    margin-bottom: 0.6rem;
+}
+.play-history {
+    margin: 0.5rem 0 0.25rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid #444;
+}
+.history-row {
+    display: flex;
+    gap: 0.6rem;
+    padding: 1px 0;
+    font-size: 0.75rem;
+    color: #cccccc;
+}
+.history-date {
+    width: 3.5rem;
+    text-align: left;
+}
+.history-mark {
+    width: 1rem;
+}
+.history-won .history-mark {
+    color: #44cc44;
+}
+.history-lost .history-mark {
+    color: #ff4444;
+}
+.history-time {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Share confirmation */
+.share-confirm {
+    color: #44cc44;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+/* Countdown timer */
+.daily-countdown {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #999999;
+}
+
+/* Greyed out guessed AA button */
+.mp-density-aa-btn.guessed {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    text-decoration: line-through;
+}
+.mp-density-aa-btn.guessed:hover {
+    filter: none;
+    transform: none;
+}
+
+/* === Time Attack Life Bar === */
+.ta-life-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    z-index: 15;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+}
+.ta-life-bar.active {
+    display: block;
+}
+.ta-life-bar-fill {
+    height: 100%;
+    width: 100%;
+    transition: width 0.1s linear;
+    background-color: #44cc44;
+}
+.ta-life-bar-fill.ta-bar-green {
+    background-color: #44cc44;
+}
+.ta-life-bar-fill.ta-bar-yellow {
+    background-color: #cc9900;
+}
+.ta-life-bar-fill.ta-bar-red {
+    background-color: #ff4444;
+    animation: ta-bar-pulse 0.8s ease-in-out infinite;
+}
+@keyframes ta-bar-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Life bar flash animations */
+@keyframes ta-bar-flash-correct {
+    0% { box-shadow: inset 0 0 10px #44cc44, 0 0 8px #44cc44; }
+    100% { box-shadow: none; }
+}
+@keyframes ta-bar-flash-wrong {
+    0% { box-shadow: inset 0 0 10px #ff4444, 0 0 8px #ff4444; }
+    100% { box-shadow: none; }
+}
+.ta-life-bar.ta-bar-flash-correct {
+    animation: ta-bar-flash-correct 0.5s ease-out;
+}
+.ta-life-bar.ta-bar-flash-wrong {
+    animation: ta-bar-flash-wrong 0.5s ease-out;
+}
+
+/* Time delta popup */
+.ta-time-delta {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: monospace;
+    pointer-events: none;
+    z-index: 20;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    animation: ta-delta-fade 1.0s ease-out forwards;
+}
+.ta-time-delta.ta-delta-plus {
+    color: #44cc44;
+}
+.ta-time-delta.ta-delta-minus {
+    color: #ff4444;
+}
+@keyframes ta-delta-fade {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    70% { opacity: 0.8; transform: translate(-50%, -80%) scale(1.1); }
+    100% { opacity: 0; transform: translate(-50%, -100%) scale(0.9); }
+}
+
+/* Correct-answer flash (shown on wrong/partial guess in time-attack) */
+.ta-answer-flash {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-family: var(--mp-font-ui);
+    color: #ffffff;
+    pointer-events: none;
+    z-index: 20;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    animation: ta-answer-fade 1.0s ease-out forwards;
+}
+@keyframes ta-answer-fade {
+    0% { opacity: 1; transform: translate(-50%, -50%); }
+    70% { opacity: 0.9; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+/* === 70's Mode Toggle Button === */
+.mp-density-btn-view-mode {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    z-index: 10;
+    font-family: monospace;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.35rem 0.6rem;
+    background-color: rgba(30, 30, 30, 0.7);
+    color: #aaaaaa;
+    border: 1px solid #555555;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.mp-density-btn-view-mode:hover {
+    background-color: rgba(50, 50, 50, 0.8);
+    color: #cccccc;
+}
+.mp-density-btn-view-mode.active {
+    background-color: rgba(60, 45, 20, 0.85);
+    color: #F5F0E0;
+    border-color: #C8B88A;
+}
+
+/* Named so the switch between the HUD and the side column glides (hud_layout.js). */
+#aaPanel { view-transition-name: aa-panel; }
+#canvasContainer { view-transition-name: density-canvas; }
+::view-transition-group(*) { animation-duration: 0.5s; }
+
+/* === Mobile HUD Overlay Layout === */
+/* Phones, and any portrait screen (a 13" iPad is 1032px wide upright): canvas with a HUD overlay.
+   hud_layout.js sets html.hud-layout from the host page's query (default: Bootstrap's lg breakpoint). */
+/* Canvas fills available viewport */
+html.hud-layout .mp-game-canvas-wrap {
+    min-height: calc(100vh - 80px);
+    min-height: calc(100dvh - 80px);
+    margin-bottom: 0;
+    border: none;
+}
+
+/* Game layout row becomes positioning context */
+html.hud-layout .game-row {
+    position: relative;
+}
+
+/* Bootstrap's lg columns would keep the canvas at 75% on a wide portrait screen */
+html.hud-layout .game-row > [class*="col-lg-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* --- Sidebar → HUD overlay grid --- */
+html.hud-layout .game-sidebar {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    pointer-events: none;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+}
+
+/* Interactive elements inside sidebar need pointer-events */
+html.hud-layout .game-sidebar button, html.hud-layout .game-sidebar select, html.hud-layout .game-sidebar input, html.hud-layout .game-sidebar a, html.hud-layout .game-sidebar .mp-density-aa-btn {
+    pointer-events: auto;
+}
+
+/* Reset panel base styles for mobile */
+html.hud-layout .game-sidebar .mp-game-panel {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Hide panel headers on mobile */
+html.hud-layout .game-sidebar .mp-game-panel h5 {
+    display: none;
+}
+
+/* Hide non-essential panels on mobile */
+html.hud-layout .game-sidebar #practiceStatsPanel, html.hud-layout .game-sidebar #dailyStatsPanel, html.hud-layout .game-sidebar #practiceLeaderboardPanel, html.hud-layout .game-sidebar #taLeaderboardPanel {
+    display: none !important;
+}
+
+/* --- Top HUD Left: Time Attack score --- */
+html.hud-layout .game-sidebar #timeAttackPanel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    grid-row: 1;
+    grid-column: 1;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 0.3rem 0.5rem;
+    color: #cccccc;
+}
+
+html.hud-layout .game-sidebar #timeAttackPanel .mp-game-stats {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+html.hud-layout .game-sidebar #timeAttackPanel .mp-game-stats li {
+    border: none;
+    padding: 0;
+    font-size: 0.75rem;
+    color: #cccccc;
+    gap: 0.2rem;
+}
+
+html.hud-layout .game-sidebar #timeAttackPanel .mp-game-stats .stat-value {
+    color: #ffffff;
+}
+
+html.hud-layout .game-sidebar #timeAttackPanel .mp-density-difficulty-select {
+    display: none;
+}
+
+/* --- Top HUD Left: Daily guess indicators --- */
+html.hud-layout .game-sidebar #dailyGuessPanel {
+    display: flex;
+    align-items: center;
+    grid-row: 1;
+    grid-column: 1;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 0.3rem 0.5rem;
+}
+
+html.hud-layout .game-sidebar .mp-density-guess-indicators {
+    padding: 0;
+    gap: 0.3rem;
+    justify-content: flex-start;
+}
+
+html.hud-layout .game-sidebar .guess-dot {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.7rem;
+    border-width: 1.5px;
+}
+
+/* --- Top HUD Left: Practice round info --- */
+html.hud-layout .game-sidebar #practiceGamePanel {
+    display: flex;
+    align-items: center;
+    grid-row: 1;
+    grid-column: 1;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 0.3rem 0.5rem;
+    color: #cccccc;
+}
+
+html.hud-layout .game-sidebar .mp-density-game-score {
+    margin: 0;
+    margin-left: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.75rem;
+    color: #cccccc;
+}
+
+html.hud-layout .game-sidebar .mp-density-game-score .score-value {
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+html.hud-layout .game-sidebar .mp-density-round {
+    margin-bottom: 0;
+    font-size: 0.75rem;
+    color: #cccccc;
+}
+
+html.hud-layout .game-sidebar .round-number {
+    color: #ffffff;
+}
+
+html.hud-layout .game-sidebar .mp-density-difficulty-select {
+    display: none;
+}
+
+/* --- Top HUD Right: Resolution + improve button --- */
+html.hud-layout .game-sidebar #resolutionPanel {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    grid-row: 1;
+    grid-column: 2;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 0.3rem 0.5rem;
+}
+
+html.hud-layout .game-sidebar .mp-density-resolution {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+html.hud-layout .game-sidebar .res-label {
+    font-size: 0.55rem;
+    color: #999999;
+    text-transform: uppercase;
+}
+
+html.hud-layout .game-sidebar .res-value {
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+html.hud-layout .game-sidebar .mp-density-resolution-steps {
+    margin-top: 0;
+}
+
+html.hud-layout .game-sidebar .mp-density-resolution-steps .step {
+    height: 3px;
+    width: 12px;
+}
+
+/* Compact improve button: labeled "Detail ▲" */
+html.hud-layout .game-sidebar .mp-density-btn-improve {
+    font-size: 0;
+    line-height: 0;
+    width: auto;
+    padding: 0.35rem 0.6rem;
+    margin: 0 !important;
+}
+
+html.hud-layout .game-sidebar .mp-density-btn-improve::before {
+    content: 'Detail \25B2';
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: bold;
+}
+
+html.hud-layout .game-sidebar .mp-density-cost {
+    display: none;
+}
+
+/* Compact hint button: labeled "Backbone" */
+html.hud-layout .game-sidebar .mp-density-btn-hint {
+    font-size: 0;
+    line-height: 0;
+    width: auto;
+    padding: 0.35rem 0.6rem;
+    margin: 0 !important;
+}
+
+html.hud-layout .game-sidebar .mp-density-btn-hint::before {
+    content: 'Backbone';
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: bold;
+}
+
+/* --- Bottom HUD: AA Grid --- */
+html.hud-layout .game-sidebar #aaPanel {
+    display: block;
+    grid-row: 3;
+    grid-column: 1 / -1;
+    background: rgba(20, 20, 30, 0.92);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 0.4rem;
+    padding-bottom: calc(0.4rem + env(safe-area-inset-bottom));
+    pointer-events: auto;
+}
+
+/* Tablets: keep the bottom controls phone-sized and centred */
+html.hud-layout .game-sidebar #aaPanel > * {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+html.hud-layout .game-sidebar .mp-density-aa-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    margin-top: 0;
+}
+
+html.hud-layout .game-sidebar .mp-density-aa-btn {
+    padding: 0.3rem 0.1rem;
+    font-size: 0.8rem;
+}
+
+/* Mobile: show three-letter code, hide one-letter and full name */
+html.hud-layout .game-sidebar .mp-density-aa-btn .aa-code {
+    display: none;
+}
+
+html.hud-layout .game-sidebar .mp-density-aa-btn .aa-three {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+html.hud-layout .game-sidebar .mp-density-aa-btn .aa-name {
+    display: none;
+}
+
+/* 70's button position handled dynamically in onResize() */
+
+/* Life bar: slightly thinner on mobile */
+html.hud-layout .ta-life-bar {
+    height: 4px;
+}
+
+/* --- Overlay adjustments for mobile --- */
+html.hud-layout .mp-game-overlay, html.hud-layout .mp-game-complete, html.hud-layout .mp-density-daily-result {
+    max-width: 85vw;
+    padding: 1.5rem;
+}
+
+/* Reveal overlay: center instead of bottom (avoid AA grid overlap) */
+html.hud-layout .mp-density-reveal {
+    bottom: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 85vw;
+    z-index: 15;
+}
+
+/* Compact mode tabs */
+html.hud-layout .mp-density-mode-tab {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.72rem;
+}
+
+/* Difficulty select in instructions overlay */
+html.hud-layout .mp-game-overlay .mp-density-difficulty-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #cccccc;
+    border-color: #666633;
+    max-width: 200px;
+}
+
+.mp-density-reveal.collapsed > :not(.strip-keep),
+.mp-game-complete.collapsed > :not(.strip-keep),
+.mp-density-daily-result.collapsed > :not(.strip-keep) {
+    display: none;
+}
+html.hud-layout .mp-density-reveal.collapsed,
+html.hud-layout .mp-game-complete.collapsed,
+html.hud-layout .mp-density-daily-result.collapsed,
+.mp-density-reveal.collapsed,
+.mp-game-complete.collapsed,
+.mp-density-daily-result.collapsed {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    top: calc(var(--hud-top, 0px) + 0.5rem);
+    left: 0.5rem;
+    bottom: auto;
+    transform: none;
+    max-width: calc(100% - 1rem);
+    padding: 0.4rem 0.75rem;
+    width: auto;
+    max-height: none;
+}
+.mp-density-reveal.collapsed .strip-keep,
+.mp-game-complete.collapsed .strip-keep,
+.mp-density-daily-result.collapsed .strip-keep {
+    margin: 0 !important;
+    cursor: pointer;
+}

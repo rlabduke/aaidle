@@ -1,0 +1,44 @@
+:root {
+  /* Brand palette */
+  --mp-olive:         #666633;
+  --mp-olive-dark:    #555522;
+  --mp-tan:           #999966;
+  --mp-tan-light:     #cccc99;
+  --mp-cream:         #f8f8f0;
+  --mp-cream-dark:    #e8e8d8;
+  --mp-maroon:        #660000;
+
+  /* Text */
+  --mp-text:          #333333;
+  --mp-text-muted:    #555555;
+  --mp-text-light:    #767676;
+
+  /* Links */
+  --mp-link:          #000099;
+
+  /* Functional */
+  --mp-success:       #336633;
+  --mp-danger:        #993333;
+  --mp-btn-bg:        #666633;
+  --mp-btn-hover:     #555522;
+  --mp-btn-disabled:  #999966;
+
+  /* Status (summary table) */
+  --mp-status-good:    #99ff99;
+  --mp-status-caution: #ffff99;
+  --mp-status-bad:     #ff9999;
+  /* File Quality rows have carried #ffcc66 since 17905e1 with no rule to
+     apply it; the commit said "amber coloring" and touched no stylesheet. */
+  --mp-status-notice:  #ffcc66;
+
+  /* Fonts */
+  /* Reading pages use Inter (self-hosted, @font-face in base.css). Results
+     pages use the narrower Arial so the dense residue table stays compact;
+     style.css sets it on their body. */
+  --mp-font-ui:    Inter, Arial, Geneva, Helvetica, sans-serif;
+  --mp-font-data:  Arial, Geneva, Helvetica, sans-serif;
+  /* Only the acknowledgements dedication. Palatino Linotype is the Windows
+     Palatino; without it Windows fell through to Times New Roman. */
+  --mp-font-serif: Optima, Palatino, "Palatino Linotype", Times, serif;
+  --mp-font-mono:  monospace;
+}
