@@ -49,7 +49,7 @@ Developed under LBNL Subcontract 7825826 to Duke University.
 
 ## Cite
 
-A paper describing AA.ID.LE is in preparation. Until then, cite the software using `CITATION.cff` (GitHub's "Cite this repository" button formats it).
+A paper describing AA.ID.LE is in preparation. Until then, cite the software: Chen, V. AA.ID.LE. Zenodo. https://doi.org/10.5281/zenodo.24043062 (this DOI always resolves to the latest release; each release also has its own DOI on Zenodo). `CITATION.cff` has the same details, and GitHub's "Cite this repository" button formats them.
 
 ## License
 

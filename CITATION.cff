@@ -8,6 +8,7 @@ authors:
     given-names: Vincent
     affiliation: "Richardson Lab, Duke University"
 version: "1.0.2"
+doi: "10.5281/zenodo.24043062"
 date-released: "2026-11-07"
 license: BSD-3-Clause
 repository-code: "https://github.com/rlabduke/aaidle"
