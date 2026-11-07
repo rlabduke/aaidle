@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AA.ID.LE</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./lib/three/three.module.js",
+    "three/addons/controls/TrackballControls.js": "./lib/three/TrackballControls.js"
+  }
+}
+</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="variables.css">
+<link rel="stylesheet" href="game.css">
+<link rel="stylesheet" href="density_game.css">
+</head>
+<body>
+<main class="game-page">
+<!-- aaidle:game-body:start -->
+
+<div class="row mt-1">
+    <div class="col-12">
+        <div class="mp-density-mode-tabs" id="modeTabs">
+            <button class="mp-density-mode-tab active" data-mode="daily">Daily</button>
+            <button class="mp-density-mode-tab" data-mode="practice">Practice</button>
+            <button class="mp-density-mode-tab" data-mode="time-attack">Time Attack</button>
+        </div>
+    </div>
+</div>
+
+<div class="row game-row">
+    <!-- Main canvas area -->
+    <div class="col-lg-9">
+        <div class="mp-game-canvas-wrap" id="canvasContainer">
+            <canvas id="densityCanvas"></canvas>
+            <!-- Time Attack life bar (shown during time-attack play) -->
+            <div class="ta-life-bar" id="taLifeBar">
+                <div class="ta-life-bar-fill" id="taLifeBarFill"></div>
+            </div>
+            <!-- Instructions overlay (shown before start) -->
+            <div class="mp-game-overlay" id="instructionsOverlay">
+                <h4>AA.ID.LE</h4>
+                <p style="font-size: 0.8rem; color: #999; margin-bottom: 0.5rem;">Amino Acid Identification</p>
+                <p>Identify the central residue of an Ala-X-Ala tripeptide from its electron density!<br>
+                Density starts at 3.5&#197; and sharpens as you request better resolution.</p>
+                <p>Guess early for more points &mdash; or improve resolution to see more detail.</p>
+                <button class="mp-game-btn mp-game-btn-primary" id="startBtn" style="margin-top: 0.5rem; padding: 0.5rem 1.5rem;">
+                    Start Game
+                </button>
+            </div>
+            <!-- Reveal overlay (shown after each guess) -->
+            <div class="mp-density-reveal d-none" id="revealOverlay">
+                <div class="reveal-result" id="revealResult"></div>
+                <div id="revealMessage"></div>
+                <div class="reveal-info" id="revealInfo"></div>
+                <button class="mp-game-btn mp-game-btn-primary" id="nextRoundBtn" style="margin-top: 0.75rem; padding: 0.4rem 1rem;">
+                    Next Round
+                </button>
+            </div>
+            <!-- Completion overlay (hidden) -->
+            <div class="mp-game-complete d-none" id="completeOverlay">
+                <h3>Game Complete!</h3>
+                <div class="mp-game-stars" id="completionStars"></div>
+                <div class="final-score" id="completionScore"></div>
+                <p id="completionDetails" style="margin-top: 0.5rem; font-size: 0.85rem; color: #cccccc;"></p>
+                <button class="mp-game-btn mp-game-btn-primary" id="playAgainBtn" style="margin-top: 1rem; padding: 0.4rem 1rem;">
+                    Play Again
+                </button>
+            </div>
+            <!-- Daily result overlay -->
+            <div class="mp-density-daily-result d-none" id="dailyResultOverlay">
+                <h3 id="dailyResultTitle"></h3>
+                <div class="daily-result-answer" id="dailyResultAnswer"></div>
+                <div class="daily-result-emoji" id="dailyResultEmoji"></div>
+                <div class="daily-stats-grid" id="dailyStatsGrid">
+                    <div class="daily-stat">
+                        <div class="daily-stat-value" id="drPlayed">0</div>
+                        <div class="daily-stat-label">Played</div>
+                    </div>
+                    <div class="daily-stat">
+                        <div class="daily-stat-value" id="drWinPct">0%</div>
+                        <div class="daily-stat-label">Win %</div>
+                    </div>
+                    <div class="daily-stat">
+                        <div class="daily-stat-value" id="drStreak">0</div>
+                        <div class="daily-stat-label">Streak</div>
+                    </div>
+                    <div class="daily-stat">
+                        <div class="daily-stat-value" id="drMaxStreak">0</div>
+                        <div class="daily-stat-label">Max</div>
+                    </div>
+                </div>
+                <div class="play-times" id="dailyTimes"></div>
+                <div class="daily-distribution" id="dailyDistribution"></div>
+                <button class="mp-game-btn mp-game-btn-primary" id="shareBtn" style="margin-top: 0.75rem; padding: 0.4rem 1.2rem;">
+                    Share Result
+                </button>
+                <div id="shareConfirm" class="share-confirm d-none">Copied!</div>
+                <div class="play-history" id="dailyHistory"></div>
+                <div class="daily-countdown" id="dailyCountdown"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar (becomes HUD overlay on mobile) -->
+    <div class="col-lg-3 game-sidebar">
+        <!-- Daily: Guess indicators -->
+        <div class="mp-game-panel daily-only" id="dailyGuessPanel">
+            <h5>Guesses</h5>
+            <div class="mp-density-guess-indicators" id="guessIndicators">
+            </div>
+        </div>
+
+        <!-- Practice: Difficulty & Round -->
+        <div class="mp-game-panel practice-only" id="practiceGamePanel">
+            <h5>Game</h5>
+            <div class="mp-density-round" id="roundIndicator">
+                Round <span class="round-number" id="roundNumber">-</span> / 10
+            </div>
+            <div class="mp-density-game-score" id="practiceScoreDisplay">
+                <span class="score-value" id="practiceScore">0</span> pts
+            </div>
+            <select class="mp-density-difficulty-select" id="difficultySelect">
+                <option value="easy">Easy (6 amino acids)</option>
+                <option value="medium" selected>Medium (14 amino acids)</option>
+                <option value="hard">Hard (all 20)</option>
+            </select>
+        </div>
+
+        <!-- Time Attack: Score & Round -->
+        <div class="mp-game-panel time-attack-only" id="timeAttackPanel">
+            <h5>Time Attack</h5>
+            <ul class="mp-game-stats">
+                <li><span>Score</span><span class="stat-value" id="taScore">0</span></li>
+                <li><span>Round</span><span class="stat-value" id="taRound">0</span></li>
+            </ul>
+            <select class="mp-density-difficulty-select" id="taDifficultySelect">
+                <option value="easy">Easy (6 amino acids)</option>
+                <option value="medium" selected>Medium (14 amino acids)</option>
+                <option value="hard">Hard (all 20)</option>
+            </select>
+        </div>
+
+        <!-- Resolution control -->
+        <div class="mp-game-panel" id="resolutionPanel">
+            <h5>Resolution</h5>
+            <div class="mp-density-resolution" id="resolutionDisplay">
+                <div class="res-label">Current Resolution</div>
+                <div class="res-value" id="resolutionValue">--</div>
+            </div>
+            <div class="mp-density-resolution-steps" id="resolutionSteps">
+                <div class="step" data-res="3.5"></div>
+                <div class="step" data-res="2.5"></div>
+                <div class="step" data-res="2.0"></div>
+                <div class="step" data-res="1.5"></div>
+                <div class="step" data-res="1.0"></div>
+            </div>
+            <button class="mp-game-btn mp-density-btn-improve mt-2" id="improveBtn" disabled>
+                Improve Resolution <span class="mp-density-cost" id="improveCost">(-200 pts)</span>
+            </button>
+            <button class="mp-game-btn mp-density-btn-hint mt-1" id="hintBtn" disabled>
+                Backbone Hint <span class="mp-density-cost" id="hintCost">(-300 pts)</span>
+            </button>
+        </div>
+
+        <!-- Amino acid selector -->
+        <div class="mp-game-panel" id="aaPanel">
+            <h5>Guess the Amino Acid</h5>
+            <div class="mp-density-aa-grid" id="aaGrid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Practice: Stats -->
+        <div class="mp-game-panel practice-only" id="practiceStatsPanel">
+            <h5>Stats</h5>
+            <ul class="mp-game-stats">
+                <li><span>Score</span><span class="stat-value" id="statScore">0</span></li>
+                <li><span>Round</span><span class="stat-value" id="statRound">0 / 10</span></li>
+                <li><span>Correct</span><span class="stat-value" id="statCorrect">0</span></li>
+                <li><span>Time</span><span class="stat-value" id="statTimer">0:00</span></li>
+            </ul>
+            <div class="mp-game-stars mt-2 text-center" id="liveStars">
+                <span>&#9734;</span><span>&#9734;</span><span>&#9734;</span>
+            </div>
+        </div>
+
+        <!-- Daily: Stats -->
+        <div class="mp-game-panel daily-only" id="dailyStatsPanel">
+            <h5>Stats</h5>
+            <ul class="mp-game-stats">
+                <li><span>Streak</span><span class="stat-value" id="dailyStreak">0</span></li>
+                <li><span>Max Streak</span><span class="stat-value" id="dailyMaxStreak">0</span></li>
+                <li><span>Played</span><span class="stat-value" id="dailyPlayed">0</span></li>
+                <li><span>Win %</span><span class="stat-value" id="dailyWinPct">0%</span></li>
+            </ul>
+        </div>
+
+        <!-- Practice: Leaderboard -->
+        <div class="mp-game-panel practice-only" id="practiceLeaderboardPanel">
+            <h5>
+                <a data-bs-toggle="collapse" href="#leaderboardCollapse" role="button" aria-expanded="true" style="color: inherit; text-decoration: none;">
+                    Leaderboard &#9662;
+                </a>
+            </h5>
+            <div class="collapse show" id="leaderboardCollapse">
+                <table class="mp-density-leaderboard" id="leaderboardTable">
+                    <thead>
+                        <tr><th>#</th><th>Difficulty</th><th>Score</th><th>Stars</th></tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr><td colspan="4" style="color: #999;">No scores yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Time Attack: Leaderboard -->
+        <div class="mp-game-panel time-attack-only" id="taLeaderboardPanel">
+            <h5>
+                <a data-bs-toggle="collapse" href="#taLeaderboardCollapse" role="button" aria-expanded="true" style="color: inherit; text-decoration: none;">
+                    Leaderboard &#9662;
+                </a>
+            </h5>
+            <div class="collapse show" id="taLeaderboardCollapse">
+                <table class="mp-density-leaderboard" id="taLeaderboardTable">
+                    <thead>
+                        <tr><th>#</th><th>Difficulty</th><th>Score</th><th>Correct</th></tr>
+                    </thead>
+                    <tbody id="taLeaderboardBody">
+                        <tr><td colspan="4" style="color: #999;">No scores yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- aaidle:game-body:end -->
+</main>
+<script>
+window.DENSITY_GAME_DATA = {task_id: '', check_status_url: '', results_url: '', static_url: 'data/', manifest_url: 'data/manifest.json', csrf_token: ''};
+</script>
+<script type="module" src="density_game.js"></script>
+</body>
+</html>

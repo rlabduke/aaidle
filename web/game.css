@@ -1,0 +1,171 @@
+/* Standalone page styles: game rules from the site's mp-game-common.css (minus the
+   analysis progress bar) plus minimal stand-ins for the Bootstrap classes the markup uses. */
+
+body {
+    margin: 0;
+    background-color: var(--mp-cream);
+    color: var(--mp-text);
+    font-family: var(--mp-font-ui);
+}
+.game-page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0.75rem;
+}
+.row { display: flex; flex-wrap: wrap; gap: 0 1rem; }
+.col-12 { flex: 0 0 100%; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.text-center { text-align: center; }
+.d-none { display: none !important; }
+.collapse:not(.show) { display: none; }
+@media (min-width: 992px) {
+    .col-lg-9 { flex: 1 1 0; min-width: 0; }
+    .col-lg-3 { flex: 0 0 25%; }
+}
+@media (max-width: 991px) {
+    .col-lg-9, .col-lg-3 { flex: 0 0 100%; }
+}
+
+/* Canvas container */
+.mp-game-canvas-wrap {
+    position: relative;
+    background-color: #1a1a2e;
+    border: 1px solid var(--mp-tan);
+    min-height: 600px;
+    cursor: grab;
+}
+.mp-game-canvas-wrap:active {
+    cursor: grabbing;
+}
+.mp-game-canvas-wrap canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sidebar panels */
+.mp-game-panel {
+    background-color: #ffffff;
+    border: 1px solid var(--mp-tan);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-family: var(--mp-font-ui);
+}
+.mp-game-panel h5 {
+    font-family: var(--mp-font-ui);
+    color: var(--mp-maroon);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--mp-tan-light);
+    padding-bottom: 0.4rem;
+}
+
+/* Stats display */
+.mp-game-stats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.mp-game-stats li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px dotted var(--mp-cream-dark);
+}
+.mp-game-stats li:last-child {
+    border-bottom: none;
+}
+.mp-game-stats .stat-value {
+    font-weight: bold;
+    color: var(--mp-text);
+    font-family: monospace;
+}
+
+/* Star rating */
+.mp-game-stars {
+    color: #ccccaa;
+    font-size: 1.4rem;
+    letter-spacing: 0.15rem;
+}
+.mp-game-stars .star-earned {
+    color: #cc9900;
+}
+
+/* Control buttons */
+.mp-game-btn {
+    background-color: var(--mp-cream);
+    border: 1px solid var(--mp-tan);
+    color: var(--mp-olive);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    font-family: var(--mp-font-ui);
+}
+.mp-game-btn:hover {
+    background-color: var(--mp-cream-dark);
+}
+.mp-game-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.mp-game-btn-primary {
+    background-color: var(--mp-btn-bg);
+    color: #ffffff;
+    border-color: var(--mp-btn-bg);
+}
+.mp-game-btn-primary:hover {
+    background-color: var(--mp-btn-hover);
+}
+
+/* Completion overlay */
+.mp-game-complete {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    padding: 2rem 3rem;
+    text-align: center;
+    border: 2px solid #cc9900;
+    z-index: 10;
+    font-family: var(--mp-font-ui);
+}
+.mp-game-complete h3 {
+    color: #cc9900;
+    margin-bottom: 1rem;
+}
+.mp-game-complete .final-score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Instructions/info overlay (base for game-specific overlays) */
+.mp-game-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #cccccc;
+    padding: 2rem;
+    text-align: center;
+    z-index: 10;
+    max-width: 450px;
+    font-family: var(--mp-font-ui);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.mp-game-overlay h4 {
+    color: #cc9900;
+    margin-bottom: 0.75rem;
+}
