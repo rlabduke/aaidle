@@ -138,6 +138,39 @@ class SyncTest(unittest.TestCase):
             with self.assertRaises(sync.SyncError):
                 sync.sync("site", self.site, bad, self.src)
 
+    def snapshot(self, root):
+        return {str(p.relative_to(root)): p.read_bytes()
+                for p in sorted(Path(root).rglob("*")) if p.is_file()}
+
+    def bad_tag(self, tag, index):
+        if index is None:
+            (self.src / "web" / "index.html").unlink()
+        else:
+            (self.src / "web" / "index.html").write_text(index)
+        (self.src / "web" / "a.js").write_text("// bad\n")
+        git(self.src, "add", "-A", "web")
+        git(self.src, "commit", "-q", "-m", tag)
+        git(self.src, "tag", tag)
+
+    def test_bad_release_leaves_destination_untouched(self):
+        self.bad_tag("v2.0.0", "<html>no markers</html>\n")
+        self.bad_tag("v2.1.0", "<!-- aaidle:game-body:end --> x <!-- aaidle:game-body:start -->\n")
+        self.bad_tag("v2.2.0", None)
+        script = str(Path(sync.__file__))
+        for target, dest in (("site", self.site), ("app", self.app)):
+            sync.sync(target, dest, "v1.0.0", self.src)
+            before = self.snapshot(dest)
+            tops = sorted(p.name for p in Path(dest).iterdir())
+            for bad in ("v2.0.0", "v2.1.0", "v2.2.0"):
+                with self.assertRaises(sync.SyncError):
+                    sync.sync(target, dest, bad, self.src)
+                self.assertEqual(self.snapshot(dest), before)
+                self.assertEqual(sorted(p.name for p in Path(dest).iterdir()), tops)
+                r = subprocess.run([sys.executable, script, target, str(dest), "--ref", bad,
+                                    "--aaidle", str(self.src)], capture_output=True, text=True)
+                self.assertEqual(r.returncode, 2, r.stderr)
+                self.assertEqual(self.snapshot(dest), before)
+
     def test_cli_exit_codes(self):
         script = str(Path(sync.__file__))
 

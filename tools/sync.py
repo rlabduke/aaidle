@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -48,13 +49,20 @@ def _check_dest(target, dest):
 
 
 def _game_body(index_html):
-    s = index_html.index(START) + len(START)
-    e = index_html.index(END)
-    return index_html[s:e].strip("\n") + "\n"
+    s = index_html.find(START)
+    e = index_html.find(END)
+    if s < 0 or e < 0 or e < s:
+        raise SyncError("web/index.html lacks the aaidle:game-body markers in order")
+    return index_html[s + len(START):e].strip("\n") + "\n"
 
 
 def _sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _swap(src, dst):
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    os.replace(src, dst)
 
 
 def sync(target, dest_repo, ref, aaidle_repo):
@@ -65,44 +73,50 @@ def sync(target, dest_repo, ref, aaidle_repo):
     commit = _git(aaidle_repo, "rev-parse", ref + "^{commit}")
     archive = _git(aaidle_repo, "archive", ref, "web/", binary=True)
 
-    with tempfile.TemporaryDirectory() as tmp:
+    # Build the whole result in a staging dir that mirrors the destination layout,
+    # so nothing in dest changes until every check has passed.
+    stage = Path(tempfile.mkdtemp(prefix=".aaidle-stage-", dir=dest))
+    try:
         with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
-            tar.extractall(tmp, filter="data") if hasattr(tarfile, "data_filter") \
-                else tar.extractall(tmp)
-        web = Path(tmp) / "web"
-        index = (web / "index.html").read_text()
+            tar.extractall(stage / "src", filter="data") if hasattr(tarfile, "data_filter") \
+                else tar.extractall(stage / "src")
+        web = stage / "src" / "web"
+        if not (web / "index.html").is_file():
+            raise SyncError("web/index.html is missing in %s" % ref)
+        body = _game_body((web / "index.html").read_text())
+
+        out = stage / "out"
+        base = SITE_BASE if target == "site" else APP_BASE
+        tree = out / base / ref if target == "site" else out / base
+        readme = out / SITE_BASE / "README.md" if target == "site" else tree / "README.md"
+        shutil.copytree(web, tree)
+        readme.write_text(README.format(tag=ref, commit=commit, target=target))
+        if target == "site":
+            (out / "templates/aaidle").mkdir(parents=True)
+            (out / "templates/aaidle/game_body.html").write_text(body)
+        files = {str(p.relative_to(out)): _sha(p)
+                 for p in sorted(out.rglob("*")) if p.is_file()}
+        record = {"tag": ref, "commit": commit, "files": files}
+        version = out / base / "VERSION.json"
+        version.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
 
         if target == "site":
-            base = dest / SITE_BASE
-            for old in base.glob("v*"):
+            old_base = dest / SITE_BASE
+            for old in old_base.glob("v*"):
                 if old.is_dir():
                     shutil.rmtree(old)
-            tree = base / ref
-            readme = base / "README.md"
-            body = dest / "templates/aaidle/game_body.html"
+            _swap(tree, old_base / ref)
+            _swap(readme, old_base / "README.md")
+            _swap(out / "templates/aaidle/game_body.html",
+                  dest / "templates/aaidle/game_body.html")
+            _swap(version, old_base / "VERSION.json")
         else:
-            tree = dest / APP_BASE
-            if tree.exists():
-                shutil.rmtree(tree)
-            readme = tree / "README.md"
-            body = None
-
-        shutil.copytree(web, tree)
-        readme.parent.mkdir(parents=True, exist_ok=True)
-        readme.write_text(README.format(tag=ref, commit=commit, target=target))
-        copied = [p for p in tree.rglob("*") if p.is_file()] + [readme]
-        if body is not None:
-            body.parent.mkdir(parents=True, exist_ok=True)
-            body.write_text(_game_body(index))
-            copied.append(body)
-
-    record = {
-        "tag": ref,
-        "commit": commit,
-        "files": {str(p.relative_to(dest)): _sha(p) for p in sorted(copied)},
-    }
-    _version_path(target, dest).write_text(
-        json.dumps(record, indent=2, sort_keys=True) + "\n")
+            live = dest / APP_BASE
+            if live.exists():
+                os.replace(live, stage / "old")
+            _swap(tree, live)
+    finally:
+        shutil.rmtree(stage, ignore_errors=True)
     return record
 
 
