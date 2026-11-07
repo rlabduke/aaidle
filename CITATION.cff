@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use AA.ID.LE, please cite it as below."
+title: "AA.ID.LE"
+abstract: "A browser game in which the player identifies an amino acid from its electron density."
+type: software
+authors:
+  - family-names: Chen
+    given-names: Vincent
+    affiliation: "Richardson Lab, Duke University"
+version: "1.0.2"
+date-released: "2026-11-07"
+license: BSD-3-Clause
+repository-code: "https://github.com/rlabduke/aaidle"
+keywords:
+  - crystallography
+  - electron density
+  - amino acids
+  - education

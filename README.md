@@ -2,6 +2,8 @@
 
 AA.ID.LE is a browser game in which the player identifies an amino acid from its electron density. Puzzles are generated from the Top8000 rotamer library and rendered with three.js. This repository is the single source for the game; the MolProbity Next web service and the AA.ID.LE iOS app each carry a copy of `web/` taken from a tagged release.
 
+Written by Vincent Chen, Richardson Lab, Duke University.
+
 ## Play locally
 
     cd web && python3 -m http.server
@@ -9,6 +11,8 @@ AA.ID.LE is a browser game in which the player identifies an amino acid from its
 Then open http://localhost:8000/.
 
 ## Tests
+
+The node tests need Node 22.15 or later (23.5 or later on the 23 line).
 
     npm test
     python3 -m unittest tests/test_sync.py
@@ -38,9 +42,14 @@ Output goes to `web/data/` by default. See `--help` for `--out`, `--amino-acids`
 ## Credits
 
 - Top8000 rotamer library, Richardson Lab, Duke University, CC BY 4.0. Central values are taken from rlabduke/reference_data (Top8000_rotamer_central_values) at commit cbe300663a2b.
+  The puzzles in `web/data/` are derived from these values: each rotamer is built into an Ala-X-Ala tripeptide with ideal geometry and its electron density is computed. The central values themselves are copied unchanged into `generator/data/top8000_rotamers/`.
 - three.js r170, MIT license, vendored in `web/lib/three/`.
 
 Developed under LBNL Subcontract 7825826 to Duke University.
+
+## Cite
+
+A paper describing AA.ID.LE is in preparation. Until then, cite the software using `CITATION.cff` (GitHub's "Cite this repository" button formats it).
 
 ## License
 
