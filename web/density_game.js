@@ -478,7 +478,7 @@ async function loadManifest() {
     try {
         const resp = await fetch(staticUrl + 'manifest.json' + dataVersionQuery());
         if (!isLoaded(resp)) {
-            console.warn('Density game data not found. Run: python manage.py generate_density_puzzles');
+            console.warn('Density game data not found. Run: python generator/generate_density_puzzles.py');
             return;
         }
         manifest = await resp.json();
