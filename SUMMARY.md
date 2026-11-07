@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- v1.0.1: sync.py --check says when the clone is older than the synced copy (fetch tags) instead of suggesting a downgrade; leaderboard toggles work on the standalone page (click handler outside the markers).
 - Added LICENSE (BSD-3) and README.md; tagged v1.0.0.
 - Added tools/sync.py (site and app targets, VERSION.json with per-file sha256, --check against the newest tag) and tests/test_sync.py.
 - Ported the puzzle generator to a plain cctbx script (generator/generate_density_puzzles.py with pro_ring, Top8000 table and CSVs) and its 16 tests; output is byte-identical to web/data. Console hint now names the new command.

@@ -33,7 +33,7 @@ Output goes to `web/data/` by default. See `--help` for `--out`, `--amino-acids`
     python tools/sync.py app <app checkout> --ref vX.Y.Z
     python tools/sync.py site <molprobity-next checkout> --check
 
-`--check` reports whether a newer aaidle tag exists. The copies must never be edited in place; make changes here, tag a release and sync again.
+`--check` reports whether a newer aaidle tag exists. It reads the clone's local tags, so run `git fetch --tags` first. The copies must never be edited in place; make changes here, tag a release and sync again.
 
 ## Credits
 

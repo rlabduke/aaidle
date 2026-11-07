@@ -120,11 +120,15 @@ def sync(target, dest_repo, ref, aaidle_repo):
     return record
 
 
+def _tag_key(tag):
+    return tuple(int(n) for n in TAG_RE.match(tag).groups())
+
+
 def latest_tag(aaidle_repo):
     tags = [t for t in _git(aaidle_repo, "tag", "--list").split() if TAG_RE.match(t)]
     if not tags:
         raise SyncError("no version tags in %s" % aaidle_repo)
-    return max(tags, key=lambda t: tuple(int(n) for n in TAG_RE.match(t).groups()))
+    return max(tags, key=_tag_key)
 
 
 def check(target, dest_repo, aaidle_repo):
@@ -136,6 +140,9 @@ def check(target, dest_repo, aaidle_repo):
     newest = latest_tag(aaidle_repo)
     if synced == newest:
         return True, "up to date (%s)" % synced
+    if TAG_RE.match(synced) and _tag_key(synced) > _tag_key(newest):
+        return False, ("clone is older than the synced copy (%s); run git fetch --tags"
+                       % synced)
     return False, "behind: %s synced, %s available" % (synced, newest)
 
 

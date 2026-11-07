@@ -129,6 +129,15 @@ class SyncTest(unittest.TestCase):
         self.assertEqual(sync.check("app", self.app, self.src),
                          (False, "behind: v1.0.0 synced, v1.10.0 available"))
 
+    def test_check_clone_older_than_synced(self):
+        sync.sync("site", self.site, "v1.1.0", self.src)
+        git(self.src, "tag", "-d", "v1.1.0")
+        ok, msg = sync.check("site", self.site, self.src)
+        self.assertFalse(ok)
+        self.assertEqual(
+            msg, "clone is older than the synced copy (v1.1.0); run git fetch --tags")
+        self.assertNotIn("v1.0.0", msg)
+
     def test_refusals(self):
         with self.assertRaises(sync.SyncError):
             sync.sync("site", self.app, "v1.0.0", self.src)

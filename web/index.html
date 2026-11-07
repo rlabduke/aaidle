@@ -243,6 +243,15 @@
 <script>
 window.DENSITY_GAME_DATA = {task_id: '', check_status_url: '', results_url: '', static_url: 'data/', manifest_url: 'data/manifest.json', csrf_token: ''};
 </script>
+<script>
+document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-bs-toggle="collapse"]');
+    if (!t) return;
+    e.preventDefault();
+    var el = document.querySelector(t.getAttribute('href'));
+    if (el) t.setAttribute('aria-expanded', el.classList.toggle('show'));
+});
+</script>
 <script type="module" src="density_game.js"></script>
 </body>
 </html>
