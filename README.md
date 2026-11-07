@@ -39,6 +39,13 @@ Output goes to `web/data/` by default. See `--help` for `--out`, `--amino-acids`
 
 `--check` reports whether a newer aaidle tag exists. It reads the clone's local tags, so run `git fetch --tags` first. The copies must never be edited in place; make changes here, tag a release and sync again.
 
+## Events
+
+The game dispatches these on `window`:
+
+- `densitygame:finished`: a finished game; `detail` is `{mode, ...}` (Daily adds `date`, `puzzle`, `outcome`, `ms`, `history`; Practice and Time Attack add `difficulty`, `score`, `rounds`).
+- `densitygame:roundresult`: each answered Practice or Time Attack round, and each completed Daily; `detail` is `{mode, puzzle, correct, resolution}`.
+
 ## Credits
 
 - Top8000 rotamer library, Richardson Lab, Duke University, CC BY 4.0. Central values are taken from rlabduke/reference_data (Top8000_rotamer_central_values) at commit cbe300663a2b.

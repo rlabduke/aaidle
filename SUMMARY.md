@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- v1.1.0: `densitygame:roundresult` event per answered round (Practice, Time Attack) and per completed Daily, so a game left midway is still seen; README lists both events.
 - Public; v1.0.2 archived on Zenodo. CITATION.cff and README cite the concept DOI 10.5281/zenodo.24043062.
 - v1.0.2 (docs only): copyright year 2026; author line, Cite section and CITATION.cff; Node version in README and package.json engines; note on how the puzzles derive from the Top8000 values.
 - v1.0.1: sync.py --check says when the clone is older than the synced copy (fetch tags) instead of suggesting a downgrade; leaderboard toggles work on the standalone page (click handler outside the markers).

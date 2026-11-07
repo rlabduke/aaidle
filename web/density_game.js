@@ -725,6 +725,7 @@ function onGuess(guessCode) {
         hint: hintLevel,
         guide: helpBought.has('guide'),
     });
+    emitRoundResult({ mode: 'practice', puzzle: puzzlePool[roundNumber - 1].id, correct: isCorrect, resolution: resKey });
 
     // UI feedback
     if (isCorrect) {
@@ -780,6 +781,10 @@ function onNextRound() {
 
 function emitFinished(detail) {
     window.dispatchEvent(new CustomEvent('densitygame:finished', { detail }));
+}
+
+function emitRoundResult(detail) {
+    window.dispatchEvent(new CustomEvent('densitygame:roundresult', { detail }));
 }
 
 function emitRound() {
@@ -1881,6 +1886,7 @@ function endDailyGame(won) {
 
     saveDailyState(state);
     updateDailySidebarStats();
+    emitRoundResult({ mode: 'daily', puzzle: dailyPuzzleEntry.id, correct: won, resolution: resKey });
     emitFinished({
         mode: 'daily',
         date: dailyDateStr,
@@ -2202,6 +2208,7 @@ function onTimeAttackGuess(guessCode) {
         hint: hintLevel,
         guide: helpBought.has('guide'),
     });
+    emitRoundResult({ mode: 'time-attack', puzzle: taEntry.id, correct: isCorrect, resolution: RESOLUTION_STEPS[currentResIndex] });
 
     // Brief atomic model flash during reveal
     showAtomicModel(currentPuzzle);
