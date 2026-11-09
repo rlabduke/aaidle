@@ -944,10 +944,20 @@ html.hud-layout .ta-life-bar {
 }
 
 /* --- Overlay adjustments for mobile --- */
+/* Centred in the band the HUD panels leave open (--hud-top/--hud-bottom, set by onResize), scrolling if taller. */
 html.hud-layout .mp-game-overlay, html.hud-layout .mp-game-complete, html.hud-layout .mp-density-daily-result {
     max-width: 85vw;
-    padding: 1.5rem;
+    padding: 1rem 1.25rem;
+    top: calc(var(--hud-top, 0px) + (100% - var(--hud-top, 0px) - var(--hud-bottom, 0px)) / 2);
+    max-height: calc(100% - var(--hud-top, 0px) - var(--hud-bottom, 0px) - 1rem);
+    overflow-y: auto;
 }
+html.hud-layout .mp-density-daily-result h3 { margin-bottom: 0.25rem; }
+html.hud-layout .daily-result-emoji { margin-bottom: 0.5rem; }
+html.hud-layout .daily-stats-grid { padding: 0.4rem 0; margin-bottom: 0.6rem; }
+html.hud-layout .daily-result-answer { margin-bottom: 0.4rem; }
+html.hud-layout .dist-row { margin-bottom: 1px; }
+html.hud-layout .dist-bar { padding: 0 6px; line-height: 1.2; }
 
 /* Reveal overlay: center instead of bottom (avoid AA grid overlap) */
 html.hud-layout .mp-density-reveal {

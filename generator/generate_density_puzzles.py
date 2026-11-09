@@ -26,6 +26,10 @@ RESOLUTION_STEPS = [3.5, 2.5, 2.0, 1.5, 1.0]
 # Uniform B-factor for clean density
 UNIFORM_B = 20.0
 
+# Amplitude left at d_min by taper(). A hard cutoff rings around each atom, and overlapping ripples can cross the
+# contour as detached blips about 1.4 d_min from the atoms; 0.7 removes them and barely changes the main surface.
+EDGE_AMPLITUDE = 0.7
+
 # Contour level in sigma (higher at high resolution for cleaner mesh)
 CONTOUR_SIGMA = {3.5: 2.0, 2.5: 2.0, 2.0: 2.5, 1.5: 4.0, 1.0: 6.0}
 
@@ -191,13 +195,17 @@ def build_xray_structure(atoms, coords, elements, resname):
     return xs
 
 
+def taper(f_calc, d_min):
+    """Fade the amplitudes to EDGE_AMPLITUDE at d_min with a Gaussian, so the map has no series-termination ripples."""
+    return f_calc.apply_debye_waller_factors(b_iso=-4 * math.log(EDGE_AMPLITUDE) * d_min ** 2)
+
+
 def calculate_density_map(xs, d_min, resolution_factor=0.25):
     """Calculate an electron density map at a given resolution.
 
     Returns a 3D numpy array (sigma-scaled).
     """
-    # Calculate structure factors
-    f_calc = xs.structure_factors(d_min=d_min).f_calc()
+    f_calc = taper(xs.structure_factors(d_min=d_min).f_calc(), d_min)
 
     # FFT to real-space map
     fft_map = f_calc.fft_map(resolution_factor=resolution_factor)

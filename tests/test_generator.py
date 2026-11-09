@@ -294,5 +294,51 @@ class BackboneClashTests(unittest.TestCase):
             self.assertAlmostEqual(psi, 140.0, delta=0.5, msg=name)
 
 
+def _mesh_pieces(mesh):
+    """Number of connected pieces in a {'v', 'f'} mesh; marching cubes repeats shared vertices, so merge by position."""
+    import numpy as np
+    verts = np.round(np.array(mesh['v'], float).reshape(-1, 3), 4)
+    _, index = np.unique(verts, axis=0, return_inverse=True)
+    faces = index.ravel()[np.array(mesh['f'], int).reshape(-1, 3)]
+    parent = list(range(int(index.max()) + 1))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    for a, b, c in faces.tolist():
+        ra = find(a)
+        parent[find(b)] = ra
+        parent[find(c)] = ra
+    return len({find(i) for i in set(faces.ravel().tolist())})
+
+
+class DensityMapTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        import generate_density_puzzles as g
+        cls.g = g
+
+    def test_taper_keeps_edge_amplitude(self):
+        xs = self.g.build_xray_structure(['C'], [[15.0, 15.0, 15.0]], ['C'], 'ALA')
+        f = xs.structure_factors(d_min=2.5).f_calc()
+        ratio = self.g.taper(f, 2.5).amplitudes().data() / f.amplitudes().data()
+        d = f.d_spacings().data()
+        self.assertAlmostEqual(min(ratio), self.g.EDGE_AMPLITUDE, delta=0.01)
+        self.assertGreater(min(r for r, x in zip(ratio, d) if x > 10), 0.98)
+
+    def test_puzzle_meshes_are_one_piece(self):
+        import glob
+        import json
+        split = []
+        for path in sorted(glob.glob(os.path.join(STATIC_DATA, 'density_*_rot*.json'))):
+            with open(path) as f:
+                meshes = json.load(f)['meshes']
+            split += ['%s %s' % (os.path.basename(path), res) for res, m in meshes.items() if _mesh_pieces(m) != 1]
+        self.assertEqual(split, [])
+
+
 if __name__ == '__main__':
     unittest.main()

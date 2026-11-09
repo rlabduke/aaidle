@@ -424,6 +424,7 @@ function onResize() {
     camera.right = vSize * aspect;
     const insets = measureInsets();
     canvasContainer.style.setProperty('--hud-top', insets.top + 'px');
+    canvasContainer.style.setProperty('--hud-bottom', insets.bottom + 'px');
     // Shift the frustum so the density centres below the top HUD overlay
     if (insets.top > 0) {
         const topHudPx = 56; // top HUD height (guess dots + resolution bar)

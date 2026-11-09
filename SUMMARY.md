@@ -1,5 +1,9 @@
 # Summary
 
+## 2026-11-09
+
+- v1.2.0: puzzle maps fade to 70% amplitude at the resolution limit (generator `taper`), removing detached Fourier-ripple blips from 14 puzzles; all 138 regenerated, with tests that every mesh is one piece. On phones, result and game-over boxes centre between the HUD panels (`--hud-bottom`) and are more compact.
+
 ## 2026-11-07
 
 - v1.1.0: `densitygame:roundresult` event per answered round (Practice, Time Attack) and per completed Daily, so a game left midway is still seen; README lists both events.
