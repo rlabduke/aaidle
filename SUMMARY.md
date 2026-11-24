@@ -1,5 +1,9 @@
 # Summary
 
+## 2026-11-24
+
+- v1.2.1: a finished Daily hides the amino-acid panel, so the map and result box get its space (the result box fits a phone without scrolling); the panel returns in Practice and Time Attack.
+
 ## 2026-11-09
 
 - v1.2.0: puzzle maps fade to 70% amplitude at the resolution limit (generator `taper`), removing detached Fourier-ripple blips from 14 puzzles; all 138 regenerated, with tests that every mesh is one piece. On phones, result and game-over boxes centre between the HUD panels (`--hud-bottom`) and are more compact.

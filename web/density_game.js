@@ -315,6 +315,11 @@ function showResultPanel(panel) {
     panel.classList.remove('d-none');
 }
 
+// A finished Daily has nothing left to pick, so its amino-acid panel gives its space to the map and result box.
+function setDailyOver(over) {
+    document.getElementById('aaPanel').classList.toggle('d-none', over);
+}
+
 // How far the HUD panels reach into the map; zero outside the HUD layout or when a panel sits beside it.
 function measureInsets() {
     if (!HUD_LAYOUT.matches) return { top: 0, bottom: 0 };
@@ -1588,6 +1593,7 @@ function switchMode(mode) {
     revealOverlay.classList.add('d-none');
     completeOverlay.classList.add('d-none');
     dailyResultOverlay.classList.add('d-none');
+    setDailyOver(false);
     instructionsOverlay.classList.remove('d-none');
     difficultySelect.disabled = false;
     setAAButtonsEnabled(false);
@@ -1745,6 +1751,7 @@ function onStartDaily() {
 
     instructionsOverlay.classList.add('d-none');
     dailyResultOverlay.classList.add('d-none');
+    setDailyOver(false);
     clearScene();
 
     gameState = 'LOADING';
@@ -1943,6 +1950,7 @@ function showDailyResult(result, state) {
     // Show overlay
     showResultPanel(dailyResultOverlay);
     instructionsOverlay.classList.add('d-none');
+    setDailyOver(true);
 
     // Start countdown
     startCountdown();
