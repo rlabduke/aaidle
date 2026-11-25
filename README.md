@@ -2,7 +2,7 @@
 
 AA.ID.LE is a browser game in which the player identifies an amino acid from its electron density. Puzzles are generated from the Top8000 rotamer library and rendered with three.js. This repository is the single source for the game; the MolProbity Next web service and the AA.ID.LE iOS app each carry a copy of `web/` taken from a tagged release.
 
-Written by Vincent Chen, Richardson Lab, Duke University. With Christopher J. Williams, Probity Point Enterprises, LLC (features and testing).
+Written by Vincent B. Chen, Richardson Lab, Duke University. With Christopher J. Williams, Probity Point Enterprises, LLC (features and testing).
 
 ## Play locally
 
@@ -56,7 +56,7 @@ Developed under LBNL Subcontract 7825826 to Duke University.
 
 ## Cite
 
-A paper describing AA.ID.LE is in preparation. Until then, cite the software: Chen, V. & Williams, C. J. AA.ID.LE. Zenodo. https://doi.org/10.5281/zenodo.24043062 (this DOI always resolves to the latest release; each release also has its own DOI on Zenodo). `CITATION.cff` has the same details, and GitHub's "Cite this repository" button formats them.
+A paper describing AA.ID.LE is in preparation. Until then, cite the software: Chen, V. B. & Williams, C. J. AA.ID.LE. Zenodo. https://doi.org/10.5281/zenodo.24043062 (this DOI always resolves to the latest release; each release also has its own DOI on Zenodo). `CITATION.cff` has the same details, and GitHub's "Cite this repository" button formats them.
 
 ## License
 

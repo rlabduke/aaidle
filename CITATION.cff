@@ -5,12 +5,14 @@ abstract: "A browser game in which the player identifies an amino acid from its 
 type: software
 authors:
   - family-names: Chen
-    given-names: Vincent
+    given-names: Vincent B.
     affiliation: "Richardson Lab, Duke University"
+    orcid: "https://orcid.org/0000-0003-2492-979X"
   - family-names: Williams
     given-names: Christopher J.
     affiliation: "Probity Point Enterprises, LLC"
-version: "1.2.3"
+    orcid: "https://orcid.org/0000-0002-5808-8768"
+version: "1.2.4"
 doi: "10.5281/zenodo.24043062"
 date-released: "2026-11-24"
 license: BSD-3-Clause

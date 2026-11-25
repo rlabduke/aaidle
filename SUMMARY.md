@@ -2,6 +2,7 @@
 
 ## 2026-11-24
 
+- v1.2.4 (docs only): both authors' ORCID iDs in CITATION.cff; Vincent B. Chen with his middle initial.
 - v1.2.3 (docs only): Christopher J. Williams added as an author in CITATION.cff and the README (features and testing).
 - v1.2.2 (docs only): CITATION.cff names this version, for the Zenodo archive; the game is identical to v1.2.1.
 - v1.2.1: a finished Daily hides the amino-acid panel, so the map and result box get its space (the result box fits a phone without scrolling); the panel returns in Practice and Time Attack.
