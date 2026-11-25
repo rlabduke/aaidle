@@ -2,6 +2,7 @@
 
 ## 2026-11-24
 
+- v1.2.2 (docs only): CITATION.cff names this version, for the Zenodo archive; the game is identical to v1.2.1.
 - v1.2.1: a finished Daily hides the amino-acid panel, so the map and result box get its space (the result box fits a phone without scrolling); the panel returns in Practice and Time Attack.
 
 ## 2026-11-09
